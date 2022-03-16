@@ -111,4 +111,4 @@ def predict(image):
     ax.set_title(f'Estimated count: {round(count)}')
     ax.set_axis('off')
     plt.show()
-    return plt
+    return fig
