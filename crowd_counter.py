@@ -3,8 +3,7 @@
 
 # In[9]:
 
-
-from tensorflow.keras.layers import BatchNormalization
+from tensorflow import keras
 from keras.initializers import RandomNormal
 from keras.models import Model,Sequential
 from keras.callbacks import ModelCheckpoint, EarlyStopping
