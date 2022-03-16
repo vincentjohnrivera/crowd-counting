@@ -1,3 +1,4 @@
+import tensorflow
 from tensorflow import keras
 from keras.initializers import RandomNormal
 from keras.models import Model,Sequential
