@@ -107,7 +107,7 @@ def predict(image):
     ans = model.predict(image)
     count = np.sum(ans)
     plt.imshow(ans.reshape(ans.shape[1],ans.shape[2]) , cmap = cm.jet)
-    plt.set_title(f'Estimated count: {round(count)}')
+    plt.title(f'Estimated count: {round(count)}')
     plt.axis('off')
     plt.show()
     return plt
