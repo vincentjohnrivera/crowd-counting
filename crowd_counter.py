@@ -1,8 +1,3 @@
-#!/usr/bin/env python
-# coding: utf-8
-
-# In[9]:
-
 from tensorflow import keras
 from keras.initializers import RandomNormal
 from keras.models import Model,Sequential
