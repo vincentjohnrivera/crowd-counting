@@ -5,10 +5,8 @@ from keras.callbacks import ModelCheckpoint, EarlyStopping
 from keras.layers import *
 from matplotlib import cm
 import matplotlib.pyplot as plt
-import scipy.io as io
 from PIL import Image
 import PIL
-import h5py
 import os
 import glob
 import cv2
