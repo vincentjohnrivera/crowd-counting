@@ -1,7 +1,7 @@
 import streamlit as st 
 from PIL import Image
 from crowdcounter import predict
-
+#
 st.title("LT6 Crowd Counter")
 
 uploaded_file = st.file_uploader("Choose an image...", type="jpg")
