@@ -1,12 +1,10 @@
-import tensorflow
-from tensorflow import keras
+import tensorflow as tf
 from keras.initializers import RandomNormal
 from keras.models import Model,Sequential
 from keras.callbacks import ModelCheckpoint, EarlyStopping
 from keras.layers import *
 from matplotlib import cm
 import matplotlib.pyplot as plt
-import tensorflow as tf
 import scipy.io as io
 from PIL import Image
 import PIL
