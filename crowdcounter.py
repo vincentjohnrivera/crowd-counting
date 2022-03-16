@@ -101,12 +101,14 @@ def create_img_pred(path):
 
 def predict(image):
     #Function to load image,predict heat map, generate count and return (count , image , heat map)
+    fig, ax = plt.subplots(figsize=(10,7))
     model = CrowdNet_vgg19()
     model.load_weights('trainedA_100_300_vgg19_bn.hdf5')
     image = create_img_pred(image)
     ans = model.predict(image)
     count = np.sum(ans)
-    plt.imshow(ans.reshape(ans.shape[1],ans.shape[2]) , cmap = cm.jet)
-    plt.title(f'Estimated count: {round(count)}')
+    ax.imshow(ans.reshape(ans.shape[1],ans.shape[2]) , cmap = cm.jet)
+    ax.set_title(f'Estimated count: {round(count)}')
+    ax.set_axis('off')
     plt.show()
     return plt
