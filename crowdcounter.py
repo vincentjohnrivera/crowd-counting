@@ -15,11 +15,12 @@ import math
 import sys
 import numpy as np
 from keras.applications.vgg19 import VGG19
+from keras.applications.vgg16 import VGG16
 from keras.layers import Dense, Conv2D, Input, MaxPooling2D, concatenate, add, UpSampling2D
 from keras.initializers import RandomNormal
 
 
-def CrowdNet_vgg19(input_shape=(None, None, 3)):
+def CSRNet(input_shape=(None, None, 3)):
 
     input_flow = Input(shape=input_shape)
     dilated_conv_kernel_initializer = RandomNormal(stddev=0.01)
@@ -42,12 +43,8 @@ def CrowdNet_vgg19(input_shape=(None, None, 3)):
     x = Conv2D(256, (3, 3), strides=(1, 1), padding='same', activation='relu')(x)
     x = BatchNormalization()(x)
     x = Conv2D(256, (3, 3), strides=(1, 1), padding='same', activation='relu')(x)
-    x = Conv2D(256, (3, 3), strides=(1, 1), padding='same', activation='relu')(x)
-    x = BatchNormalization()(x)
     x = MaxPooling2D(pool_size=(2, 2))(x)
 
-    x = Conv2D(512, (3, 3), strides=(1, 1), padding='same', activation='relu')(x)
-    x = BatchNormalization()(x)
     x = Conv2D(512, (3, 3), strides=(1, 1), padding='same', activation='relu')(x)
     x = BatchNormalization()(x)
     x = Conv2D(512, (3, 3), strides=(1, 1), padding='same', activation='relu')(x)
@@ -58,7 +55,6 @@ def CrowdNet_vgg19(input_shape=(None, None, 3)):
     x = Conv2D(512, (3, 3), strides=(1, 1), padding='same', dilation_rate=2, activation='relu', kernel_initializer=dilated_conv_kernel_initializer)(x)
     x = Conv2D(512, (3, 3), strides=(1, 1), padding='same', dilation_rate=2, activation='relu', kernel_initializer=dilated_conv_kernel_initializer)(x)
     x = Conv2D(512, (3, 3), strides=(1, 1), padding='same', dilation_rate=2, activation='relu', kernel_initializer=dilated_conv_kernel_initializer)(x)
-    x = Conv2D(512, (3, 3), strides=(1, 1), padding='same', dilation_rate=2, activation='relu', kernel_initializer=dilated_conv_kernel_initializer)(x)
     x = Conv2D(256, (3, 3), strides=(1, 1), padding='same', dilation_rate=2, activation='relu', kernel_initializer=dilated_conv_kernel_initializer)(x)
     x = Conv2D(128, (3, 3), strides=(1, 1), padding='same', dilation_rate=2, activation='relu', kernel_initializer=dilated_conv_kernel_initializer)(x)
     x = Conv2D(64, (3, 3), strides=(1, 1), padding='same', dilation_rate=2, activation='relu', kernel_initializer=dilated_conv_kernel_initializer)(x)
@@ -66,7 +62,7 @@ def CrowdNet_vgg19(input_shape=(None, None, 3)):
     output_flow = Conv2D(1, 1, strides=(1, 1), padding='same', activation='relu', kernel_initializer=dilated_conv_kernel_initializer)(x)
     model = Model(inputs=input_flow, outputs=output_flow)
 
-    front_end = VGG19(weights='imagenet', include_top=False)
+    front_end = VGG16(weights='imagenet', include_top=False)
 
     weights_front_end = []
     for layer in front_end.layers:
@@ -80,6 +76,17 @@ def CrowdNet_vgg19(input_shape=(None, None, 3)):
             model.layers[i].set_weights(weights_front_end[counter_conv])
             counter_conv += 1
 
+    names = []
+    for layer in model.layers:
+        names.append(layer.name)
+    to_freeze = names[:23]
+    
+    for layer in model.layers:
+        if layer.name in to_freeze:
+            layer.trainable = False
+        else:
+            layer.trainable = True
+            
     return model
 
 
@@ -101,8 +108,8 @@ def create_img_pred(path):
 
 def predict(image):
     #Function to load image,predict heat map, generate count and return (count , image , heat map)
-    model = CrowdNet_vgg19()
-    model.load_weights('trainedA_100_300_vgg19_bn.hdf5')
+    model = CSRNet()
+    model.load_weights('trainedAB_vgg16tuned_es8.hdf5')
     image = create_img_pred(image)
     ans = model.predict(image)
     count = np.sum(ans)
