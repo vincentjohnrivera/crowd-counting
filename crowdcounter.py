@@ -109,7 +109,7 @@ def create_img_pred(path):
 def predict(image):
     #Function to load image,predict heat map, generate count and return (count , image , heat map)
     model = CSRNet()
-    model.load_weights('trainedAB_vgg16tuned_es8.hdf5')
+    model.load_weights('final_vgg16bn_A.hdf5')
     image = create_img_pred(image)
     ans = model.predict(image)
     count = np.sum(ans)
